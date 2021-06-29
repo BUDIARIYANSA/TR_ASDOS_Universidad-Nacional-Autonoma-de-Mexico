@@ -16,6 +16,32 @@ float xdiff = 0.0f;
 float ydiff = 0.0f;
 bool mouseDown = false;
 
+GLuint loadTexture(Image* image) {
+    GLuint textureId;
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexImage2D(GL_TEXTURE_2D,
+        0,
+        GL_RGB,
+        image->width, image->height,
+        0,
+        GL_RGB,
+        GL_UNSIGNED_BYTE,
+
+        image->pixels);
+    return textureId;
+}
+
+GLuint _textureId;
+
+void initRendering() {
+
+
+    Image* image = loadBMP("texture.bmp");
+    _textureId = loadTexture(image);
+    delete image;
+}
+
 void initGL()
 {
     glClearColor(0.6, 0.9, 0.9, 1.0);
