@@ -10,6 +10,12 @@ float putarX = .0f, putarY = .0f, z = .0f;
 float geserX = .0f, geserY = .0f;
 int is_depth, n = 100, in_depth;
 
+float xrot = 0.0f;
+float yrot = 0.0f;
+float xdiff = 0.0f;
+float ydiff = 0.0f;
+bool mouseDown = false;
+
 void initGL()
 {
     glClearColor(0.6, 0.9, 0.9, 1.0);
@@ -36,10 +42,73 @@ void reshape(GLsizei width, GLsizei height) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+void keyboard(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT: geserX += 4.4; break;
+    case GLUT_KEY_RIGHT: geserX += -4.4; break;
+    case GLUT_KEY_UP: geserY += 4.4; break;
+    case GLUT_KEY_DOWN: geserY += -4.4; break;
+    }
+}
+
+void specKey(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 'z': 
+    case 'Z':
+        z += 9.4; break;
+    case 'x':
+    case 'X':
+        z += -9.4; break;
+    case 'a':
+    case 'A':
+        putarX += 4.4; break;
+    case 'd':
+    case 'D':
+        putarX += -4.4; break;
+    case 'w':
+    case 'W':
+        putarY += 4.4; break;
+    case 's':
+    case 'S':
+        putarY += -4.4; break;
+    default:
+        break;
+    }
+}
+
 void timer(int value)
 {
     glutPostRedisplay();
     glutTimerFunc(1000 / 60, timer, 0);
+}
+
+void mouse(int button, int state, int x, int y)
+
+{
+    if (button == GLUT_LEFT_BUTTON && state
+        == GLUT_DOWN)
+    {
+        mouseDown = true;
+        xdiff = x - yrot;
+        ydiff = -y - xrot;
+    }
+    else
+        mouseDown = false;
+}
+
+void mouseMotion(int x, int y)
+{
+    if (mouseDown)
+    {
+        xrot = x - xdiff;
+        yrot = y + ydiff;
+
+        glutPostRedisplay();
+    }
 }
 
 void pagarGedung()
@@ -159,6 +228,18 @@ void jendela2()
     glTexCoord2f(0.374f, 0.724f);
     glVertex3f(54.0f, 0.0f, 25.0f);
     glEnd();
+    glPopMatrix();
+}
+
+void layarlcd()
+{
+    glPushMatrix();
+    glColor3f(.0f, .0f, .0f);
+    glTranslatef(-120.f, -28.0f, 220.f);
+    glScalef(5, 2.1, .2);
+    glutSolidCube(20);
+    glColor3f(.0f, .0f, .0f);
+    glutWireCube(20);
     glPopMatrix();
 }
 
